@@ -26,6 +26,7 @@ Core mod every Odyssey mod depends on. Owns the `/odyssey` command root and prov
 - Mailbox: rewards never expire (manual admin purge); new-mail notice = clickable chat on join/arrival + title/action bar + sound; admins can send items/Points to one or all players (UI + command, audited)
 - Configurable aliases `/afk`, `/mailbox`, `/points` → `/odyssey ...` (can be disabled)
 - Rewards usually combine items + Odyssey Points; reward types are pluggable (Origins adds custom-origin items)
+- **Legacy migration framework**: modules register importers for old data; run once, verify, move old files to `legacy-backup/` (D42)
 - JSON for all config/data; message prefix `[Odyssey]` gold on dark gray
 
 ## Extraction sources (`reference/`)
@@ -41,7 +42,7 @@ The owner's MiniEvents and ChatGames mods share a proven infrastructure that bec
 | Scheduler | both `util/Scheduler` |
 | Permissions | both `Perms` |
 | Messages / text formatting | MiniEvents `util/Text`, ChatGames `util/MiniText` |
-| **Player state snapshot** (inventory + Curios + backpacks + Origins pause/restore, crash-safe) — proposed | MiniEvents `backup/`, `compat/` |
+| **Player state snapshot** (inventory + Curios + backpacks + Origins pause/restore, crash-safe) — confirmed (D39) | MiniEvents `backup/`, `compat/` |
 
 ## Library services used
 - Full service list: see `../../docs/ARCHITECTURE.md` section 2
@@ -72,6 +73,5 @@ _To be filled after interview._
 _To be filled after interview._
 
 ## Open questions
-- [ ] Promote MiniEvents' player-state backup (inventory/Curios/backpacks/Origins pause) to a Library service for all event mods?
 - [ ] Is a client-side part of the Library needed (only if AntiCheat needs a client)?
 - [ ] Hub UI layout and branding (colours, prefix, server name)
