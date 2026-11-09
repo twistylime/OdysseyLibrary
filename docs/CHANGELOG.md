@@ -5,6 +5,13 @@ Each release section must exist before merging to `main` (release notes are take
 
 ## [Unreleased]
 
+## [1.0.0-alpha.3] - 2026-11-09
+### Added
+- Chest UI framework: anti-dupe menus, anvil text/number input, paged lists, confirm dialog, edit locks,
+  suspended screens (items are never lost while navigating), remote rendering for Web Controls
+- Auto-generated settings editor for any config
+- `/odyssey` hub: paged module icons, admin tools (modules, settings, audit, performance)
+
 ## [1.0.0-alpha.2] - 2026-11-09
 ### Added
 - Scheduler: tick tasks, async IO pool, main-thread hand-off, failure isolation

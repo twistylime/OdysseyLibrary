@@ -1,6 +1,7 @@
 package com.lime.odyssey.lib;
 
 import com.lime.odyssey.lib.internal.Lifecycle;
+import com.lime.odyssey.lib.internal.UiHooks;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -17,5 +18,6 @@ public final class OdysseyLib {
 
     public OdysseyLib() {
         MinecraftForge.EVENT_BUS.register(new Lifecycle());
+        MinecraftForge.EVENT_BUS.register(new UiHooks());
     }
 }
