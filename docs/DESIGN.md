@@ -74,5 +74,5 @@ _To be filled after interview._
 _To be filled after interview._
 
 ## Open questions
-- [ ] Is a client-side part of the Library needed (only if AntiCheat needs a client)?
+- [x] Client part: only what Better AntiCheat needs (handshake/channel); everything else server-only (D10)
 - [ ] Hub UI layout and branding (colours, prefix, server name)
