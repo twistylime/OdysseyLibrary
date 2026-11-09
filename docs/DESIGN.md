@@ -28,6 +28,21 @@ Core mod every Odyssey mod depends on. Owns the `/odyssey` command root and prov
 - Rewards usually combine items + Odyssey Points; reward types are pluggable (Origins adds custom-origin items)
 - JSON for all config/data; message prefix `[Odyssey]` gold on dark gray
 
+## Extraction sources (`reference/`)
+The owner's MiniEvents and ChatGames mods share a proven infrastructure that becomes the Library baseline
+(rewritten to suite conventions, JSON instead of NBT files):
+| Library service | From |
+|---|---|
+| UI framework (Gui, GuiMenu, GuiManager, Click, PagedGui, ConfirmGui) | MiniEvents `gui/`, ChatGames `gui/` |
+| Anvil text input (TextInput, TextInputMenu) | MiniEvents + ChatGames |
+| Mailbox | MiniEvents `mailbox/MailboxManager` |
+| Rewards (pools, categories) | MiniEvents `reward/`, ChatGames `RewardDispenser` |
+| Data store (atomic tmp → .bak → move, read fallback to .bak) | MiniEvents `data/Storage`, ChatGames `io/SafeIO` |
+| Scheduler | both `util/Scheduler` |
+| Permissions | both `Perms` |
+| Messages / text formatting | MiniEvents `util/Text`, ChatGames `util/MiniText` |
+| **Player state snapshot** (inventory + Curios + backpacks + Origins pause/restore, crash-safe) — proposed | MiniEvents `backup/`, `compat/` |
+
 ## Library services used
 - Full service list: see `../../docs/ARCHITECTURE.md` section 2
 
@@ -57,5 +72,6 @@ _To be filled after interview._
 _To be filled after interview._
 
 ## Open questions
+- [ ] Promote MiniEvents' player-state backup (inventory/Curios/backpacks/Origins pause) to a Library service for all event mods?
 - [ ] Is a client-side part of the Library needed (only if AntiCheat needs a client)?
 - [ ] Hub UI layout and branding (colours, prefix, server name)
