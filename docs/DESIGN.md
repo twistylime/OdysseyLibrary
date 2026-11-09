@@ -26,6 +26,7 @@ Core mod every Odyssey mod depends on. Owns the `/odyssey` command root and prov
 - Mailbox: rewards never expire (manual admin purge); new-mail notice = clickable chat on join/arrival + title/action bar + sound; admins can send items/Points to one or all players (UI + command, audited)
 - Configurable aliases `/afk`, `/mailbox`, `/points` → `/odyssey ...` (can be disabled)
 - **Soulbound reward items**: bound to a player UUID; if dropped, picked up by others, burned, destroyed or despawned they return to the owner's Mailbox
+- **Hub UI** (`/odyssey`): paged chest UI, one icon per installed module (pages grow as mods are added), player's Mailbox + Points balance, admin tools visible only to admins
 - Rewards usually combine items + Odyssey Points; reward types are pluggable (Origins adds custom-origin items)
 - **Legacy migration framework**: modules register importers for old data; run once, verify, move old files to `legacy-backup/` (D42)
 - JSON for all config/data; message prefix `[Odyssey]` gold on dark gray
@@ -75,4 +76,3 @@ _To be filled after interview._
 
 ## Open questions
 - [x] Client part: only what Better AntiCheat needs (handshake/channel); everything else server-only (D10)
-- [ ] Hub UI layout and branding (colours, prefix, server name)
