@@ -25,6 +25,7 @@ Core mod every Odyssey mod depends on. Owns the `/odyssey` command root and prov
 - Access: vanilla OP levels only (admin level configurable, default 2)
 - Mailbox: rewards never expire (manual admin purge); new-mail notice = clickable chat on join/arrival + title/action bar + sound; admins can send items/Points to one or all players (UI + command, audited)
 - Configurable aliases `/afk`, `/mailbox`, `/points` → `/odyssey ...` (can be disabled)
+- **Soulbound reward items**: bound to a player UUID; if dropped, picked up by others, burned, destroyed or despawned they return to the owner's Mailbox
 - Rewards usually combine items + Odyssey Points; reward types are pluggable (Origins adds custom-origin items)
 - **Legacy migration framework**: modules register importers for old data; run once, verify, move old files to `legacy-backup/` (D42)
 - JSON for all config/data; message prefix `[Odyssey]` gold on dark gray
