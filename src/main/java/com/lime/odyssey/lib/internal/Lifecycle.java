@@ -7,6 +7,7 @@ import com.lime.odyssey.lib.api.config.ConfigWatcher;
 import com.lime.odyssey.lib.api.config.Configs;
 import com.lime.odyssey.lib.api.data.DataStore;
 import com.lime.odyssey.lib.api.event.ConfigChangedEvent;
+import com.lime.odyssey.lib.api.migrate.Migrations;
 import com.lime.odyssey.lib.api.module.Modules;
 import com.lime.odyssey.lib.api.notify.Notify;
 import com.lime.odyssey.lib.api.perf.Perf;
@@ -30,8 +31,9 @@ import net.minecraftforge.server.permission.events.PermissionGatherEvent;
  * Starts and stops every Library service in a fixed order and drives the tick loop.
  * <pre>
  * about-to-start: scheduler, data store, library config, audit, notifications, perf
- * started:        modules (+ their configs/data), aliases, config watcher
- * stopping:       HIGHEST modules -> HIGH ui -> LOWEST flush + scheduler shutdown
+ * started (HIGH): points, mailbox, snapshots (service hooks)
+ * started:        modules (+ their configs/data), aliases, config watcher, legacy migrations
+ * stopping:       HIGHEST modules -> HIGH ui -> LOW points/mailbox -> LOWEST flush + scheduler shutdown
  * </pre>
  */
 public final class Lifecycle {
@@ -52,6 +54,7 @@ public final class Lifecycle {
     public void onStarted(ServerStartedEvent e) {
         MinecraftServer server = e.getServer();
         Modules.start(server);
+        Migrations.runAll(server);
         OdysseyCommands.startAliases(server);
         ConfigWatcher.start(DataStore.configDir());
         OdysseyLib.LOGGER.info("[Odyssey] Library ready with {} module(s)", Modules.all().size());

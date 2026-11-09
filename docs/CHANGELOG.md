@@ -5,6 +5,16 @@ Each release section must exist before merging to `main` (release notes are take
 
 ## [Unreleased]
 
+## [1.0.0-alpha.4] - 2026-11-09
+### Added
+- Odyssey Points: playtime earning, daily login bonus with streaks, admin commands, hub balance
+- AFK detection with `/odyssey afk`, tab-list suffix; AFK time earns no points
+- Mailbox (`/odyssey mailbox`): claim/claim all, admin view/delete/purge, staff compose screen (one player or everyone)
+- Rewards (items, points, XP, commands, weighted pools, custom reward types) and the reward editor screen
+- Soulbound items that always return to the owner's mailbox
+- Player state snapshots (inventory, Curios, Origins, XP, effects...) with admin restore screen
+- Legacy data migration framework; Web Controls bridge
+
 ## [1.0.0-alpha.3] - 2026-11-09
 ### Added
 - Chest UI framework: anti-dupe menus, anvil text/number input, paged lists, confirm dialog, edit locks,
