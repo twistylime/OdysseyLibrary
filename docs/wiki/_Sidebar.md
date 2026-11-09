@@ -4,4 +4,7 @@
 - [[Permissions]]
 - [[Configuration]]
 - [[User Interface|User-Interface]]
+- [[Odyssey Points|Odyssey-Points]]
+- [[Mailbox]]
 - [[FAQ]]
+- [[Developer Guide|Developer-Guide]]

@@ -1,6 +1,6 @@
 # Odyssey Library — Implementation Specification
 
-Status: **Ready for implementation (v1.0.0)** · Source of truth for code. `DESIGN.md` = what/why, this file = how.
+Status: **Implemented in 1.0.0-alpha.4** (see section 25 for notes) · Source of truth for code. `DESIGN.md` = what/why, this file = how.
 Any deviation during coding is recorded here in the same PR.
 
 ## 0. Build
@@ -207,3 +207,19 @@ sched.later(ticks, r); sched.every(periodTicks, r) -> TaskHandle; sched.sync(r);
 8. `feature/notify-perf-migration-webbridge`
 9. `docs/wiki` — full wiki pages
 Each PR: version bump (`1.0.0-alpha.N` until 1.0.0), CHANGELOG entry, review per checklist.
+
+## 25. Implementation notes (1.0.0-alpha.4)
+Where the code differs from the plan above, the code is authoritative; the reasons are recorded here.
+
+| Topic | As built | Why |
+|---|---|---|
+| API shape | Services are static classes in `api.*` (`Scheduler`, `Mailbox`, `Points`, `Rewards`, `Perms`...). No `OdysseyApi` accessor | Fewer layers; every service is server-scoped and started/stopped by the Library |
+| Permissions | Declared with `Perms.declare(module, action, default)` **during mod construction** (static fields) | Forge gathers permission nodes once at server start |
+| Module commands | `OdysseyModule.commands(ModuleCommands)` is called on every command-tree build; nodes are gated by the module's enabled state | Command registration happens before modules enable and again on `/reload` |
+| Points / Mailbox storage | One JSON file each (`points.json`, `mailbox.json`), loaded at server start, saved asynchronously; mailbox saved at the end of the tick after every change | Simple and fast at this server's size; immediate mailbox save prevents duplicate claims after a crash |
+| Player snapshots | Active snapshot stored inside the player's save data (`ForgeData.PlayerPersisted.odyssey_snapshots`) + history on disk (`snapshots/<uuid>/*.dat`, 30 days) | Snapshot and inventory are always saved together, so a crash can never separate them |
+| Soulbound | A soulbound item can never exist as a dropped item: any item entity carrying one is cancelled and the item mailed home; inventories of non-owners are scanned every 2 s | Closes every pickup / destroy / mob / hopper path at once |
+| Config editing | Simple fields (numbers, booleans, text, enums) via settings UI, command or file; lists/maps via module menus or the file | A generic editor for nested data would be worse than a purpose-built module menu |
+| Command metadata | Not exported separately; Web Controls reads the Brigadier tree and uses completions | Avoids a second source of truth |
+| Custom reward types | Produce items at grant time (`Rewards.registerType`) | Keeps claim logic uniform; soulbound reward items are just items |
+| Stop order | modules (HIGHEST) → UI (HIGH) → points/mailbox/snapshots (LOW) → flush + scheduler (LOWEST) | Disabling modules may still send mail; closing menus may return items |

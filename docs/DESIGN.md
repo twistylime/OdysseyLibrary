@@ -5,7 +5,7 @@
 | Repo | github.com/twistylime/OdysseyLibrary |
 | modid | `odysseylib` (provisional) |
 | Category | Library |
-| Status | **Draft — interview in progress** |
+| Status | **Implemented (1.0.0-alpha.4), awaiting in-game testing** |
 | Depends on | — |
 | Command root | `/odyssey` |
 | Permission root | `odyssey.*` |
