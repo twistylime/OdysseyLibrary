@@ -1,0 +1,58 @@
+name: release
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+concurrency:
+  group: release
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Read version
+        id: v
+        run: |
+          VERSION=$(grep -E '^mod_version=' gradle.properties | cut -d= -f2 | tr -d '[:space:]')
+          NAME=$(grep -E '^mod_name=' gradle.properties | cut -d= -f2-)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "name=$NAME" >> "$GITHUB_OUTPUT"
+          if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+            echo "::error::Tag v$VERSION already exists - bump mod_version in gradle.properties"; exit 1
+          fi
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+      - run: chmod +x gradlew && ./gradlew build --no-daemon
+      - name: Extract changelog section
+        run: |
+          awk -v ver="${{ steps.v.outputs.version }}" '
+            $0 ~ "^## \\[" ver "\\]" {p=1; next}
+            p && /^## \[/ {exit}
+            p {print}' docs/CHANGELOG.md > release-notes.md
+          [ -s release-notes.md ] || { echo "::error::No CHANGELOG entry for ${{ steps.v.outputs.version }}"; exit 1; }
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "v${{ steps.v.outputs.version }}" build/libs/*.jar \
+            --title "${{ steps.v.outputs.name }} ${{ steps.v.outputs.version }}" \
+            --notes-file release-notes.md --target "$GITHUB_SHA"
+      - name: Sync wiki
+        if: hashFiles('docs/wiki/Home.md') != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git clone "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.wiki.git" wiki || { echo "::warning::Wiki not initialised - create the first page on GitHub once"; exit 0; }
+          rsync -a --delete --exclude .git docs/wiki/ wiki/
+          cd wiki
+          git config user.name "twistylime"
+          git config user.email "ritu10mali@gmail.com"
+          git add -A
+          git diff --cached --quiet || { git commit -m "docs: sync wiki for v${{ steps.v.outputs.version }}"; git push; }
